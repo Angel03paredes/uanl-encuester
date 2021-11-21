@@ -9,8 +9,15 @@ import { Button } from "@mui/material";
 import {Link as RouterLink} from 'react-router-dom'
 import { Link } from "@mui/material";
 import { Container } from "@mui/material";
+import { useHistory } from 'react-router';
 
-const NavBar = ({colorBack,elevation})=>{
+const NavBar = ({colorBack,elevation,isAuth})=>{
+    var history = useHistory();
+    const signOut = ()=>{
+        localStorage.clear()
+        history.push("/")
+    }
+
     return (
         <div>
             <AppBar color={colorBack}  position="static" elevation={elevation} >
@@ -22,23 +29,30 @@ const NavBar = ({colorBack,elevation})=>{
                     <Link color="inherit" className="font-logo" style={{textDecoration:"none"}} component={RouterLink} to="/">Encuester</Link>
                 </Typography>
                
-                
-                <Link component={RouterLink} style={{textDecoration:"none"}}  color="inherit" to="/signin">
-               <Button variant="text" style={{marginRight:"5px"}}  color="inherit"> 
-               Ingresa
-               </Button>
-               </Link>
-              
-               <Link  style={{textDecoration:"none"}} component={RouterLink} variant="outline" color="inherit" to="/signup">
-                <Button variant="contained" style={{marginRight:"5px"}} color="secondary">Registrate
-                </Button>
-                </Link>
-
-                <Link component={RouterLink} style={{textDecoration:"none"}}  color="inherit" to="/">
-               <Button variant="text" style={{marginRight:"5px"}}  color="inherit"> 
+                {isAuth ? (<Link component={RouterLink} style={{textDecoration:"none"}}  color="inherit" to="/">
+               <Button onClick={signOut} variant="text" style={{marginRight:"5px"}}  color="inherit"> 
                Cerrar Sesión
                </Button>
-               </Link>
+               </Link>):(
+                   <div>
+                         <Link component={RouterLink} style={{textDecoration:"none"}}  color="inherit" to="/signin">
+                    <Button variant="text" style={{marginRight:"5px"}}  color="inherit"> 
+                    Ingresa
+                    </Button>
+                    </Link>
+                   
+                    <Link  style={{textDecoration:"none"}} component={RouterLink} variant="outline" color="inherit" to="/signup">
+                     <Button variant="contained" style={{marginRight:"5px"}} color="secondary">
+                         Registrate
+                     </Button>
+                     </Link>
+
+                       </div>
+     
+               )
+                }
+               
+                
                 
             </Toolbar>
                 </Container>

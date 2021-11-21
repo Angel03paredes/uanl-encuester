@@ -11,6 +11,7 @@ import {ArrowForwardIos,Edit,Reorder,FlashOn,Share,MoneyOff,Equalizer} from '@mu
 import { Typography,Link } from "@mui/material";
 import CardLanding from "./CardLanding";
 import {Link as RouterLink} from 'react-router-dom'
+import { useHistory } from 'react-router';
 
 function Copyright(props) {
     return (
@@ -26,6 +27,18 @@ function Copyright(props) {
   }
 
 const Landing = ()=>{
+    var history = useHistory();
+    const [auth,setAuth] = React.useState({is:false})
+
+  
+
+    React.useEffect(() => {
+      var id = localStorage.getItem("id");
+  
+      if(id){
+        history.push("/cms")
+      }
+    }, [])
     
 const [ref, inView] = useInView({
     triggerOnce: true,
@@ -45,13 +58,13 @@ const [refCuest, inViewCuest] = useInView({
     return (
        <>
         <div className="landing-back"  >
-            <NavBar colorBack="transparent" elevation="0"></NavBar>
+            <NavBar colorBack="transparent" isAuth={auth.is} elevation="0"></NavBar>
             <div className="landing-row">
                  <div className="landing-col">
                     <Typography width="60%" variant="h2" >La mejor forma de crear encuestas</Typography>
                     <Typography width="60%" variant="h4" >Crea, comparte y observa los resutados.</Typography>
                    <div style={{width:"60%",marginTop:"1rem"}} >
-                   <Link  style={{textDecoration:"none"}} component={RouterLink} variant="outline" color="inherit" to="/cms"><Button variant="contained" endIcon={<ArrowForwardIos/>} size="large" color="success">Empezar</Button></Link>
+                   <Link  style={{textDecoration:"none"}} component={RouterLink} variant="outline" color="inherit" to="/signup"><Button variant="contained" endIcon={<ArrowForwardIos/>} size="large" color="success">Empezar</Button></Link>
                    </div>
                  </div>
                  <div className="landing-col">

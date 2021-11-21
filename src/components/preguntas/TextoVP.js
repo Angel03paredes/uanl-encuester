@@ -4,7 +4,6 @@ import {TextField,Typography,Button} from '@mui/material'
 import {Add} from '@mui/icons-material'
 
 
-
 const TextoVP = ({cont,text})=>{
 
   

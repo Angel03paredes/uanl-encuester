@@ -1,17 +1,39 @@
-import React from "react";
+import React,{useContext} from "react";
 import { Typography } from "@mui/material";
 import CalificacionVP from "./preguntas/CalificacionVP";
 import TextoVP from "./preguntas/TextoVP";
 import OpcionVP from "./preguntas/OpcionVP";
+import PreguntasContext from "./context/PreguntasContext";
+
+
+
+const renderSwitch =(item,contador)=> {
+  
+    switch(item.type) {
+      case 1:
+        return <TextoVP text={item.texto} cont={contador} ></TextoVP>;
+      case 2:
+          return <CalificacionVP text={item.texto} cont={contador} ></CalificacionVP>;
+      case 3:
+          return <OpcionVP text={item.texto} cont={contador} ></OpcionVP>;
+      default:
+        return '';
+    }
+  }
 
 const VistaPrevia = ()=>{
+    const {preguntas,addPregunta,addEncuesta,encuesta,nuevo} = useContext(PreguntasContext)
     return (
         <div>
-             <Typography style={{marginBottom:"15px"}} variant="h3" color="GrayText" >Nombre de formulario</Typography>
-            <Typography  style={{marginBottom:"15px"}} variant="h5" color="GrayText" >Descripcion de formulario</Typography>
-            <CalificacionVP cont="1" text="Pregunta de calificacion"></CalificacionVP>
-            <TextoVP cont="2" text="Pregunta dos"></TextoVP>
-            <OpcionVP cont="3" text="Pregunta 3"></OpcionVP>
+             <Typography style={{marginBottom:"15px"}} variant="h3" color="GrayText" >{encuesta.name}</Typography>
+            <Typography  style={{marginBottom:"15px"}} variant="h5" color="GrayText" >{encuesta.description}</Typography>
+            {
+           preguntas.map((item,i)=>(
+           
+              renderSwitch(item,i + 1)
+            
+           ))
+         }
         </div>
     )
 }

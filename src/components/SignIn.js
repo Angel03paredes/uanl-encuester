@@ -13,6 +13,11 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import NavBar from './NavBar';
+import axios from 'axios';
+import { url } from '../serviceUrl';
+import Swal from 'sweetalert2'
+import { useHistory } from 'react-router';
+
 
 function Copyright(props) {
   return (
@@ -30,19 +35,74 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
+
+  var history = useHistory();
+
+  const [auth,setAuth] = React.useState({is:false})
+
+  
+
+  React.useEffect(() => {
+    var id = localStorage.getItem("id");
+
+    if(id){
+      history.push("/cms")
+    }
+  }, [])
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    var Pass = data.get("password");
+    var Correo = data.get("email");
+    if(Pass && Correo){
+      axios.get(`${url}InicioSesion?Pass=${Pass}&Correo=${Correo}`)
+      .then(function (response) {
+        console.log(response);
+       if(response.data.idUsuario){
+         var user = response.data;
+         localStorage.setItem("id",user.idUsuario)
+         localStorage.setItem("email",user.correo)
+         localStorage.setItem("name",user.nombre)
+        Swal.fire({
+          icon: 'success',
+          title: 'Ingresaste Correctamente',
+          showConfirmButton: false,
+          timer: 2500
+        }).then(history.push("/cms"))
+       }else{
+        Swal.fire({
+          title: 'Error',
+          text: 'El usuario y la contraseña no coinciden',
+          icon: 'error',
+          confirmButtonText: 'Entendido'
+        })
+       }
+      })
+      .catch(function (error) {
+        console.log(error);
+        Swal.fire({
+          title: 'Error',
+          text: 'OOPS! Vuelve a intentarlo',
+          icon: 'error',
+          confirmButtonText: 'Entendido'
+        })
+      
+      })
+  }else{
+    Swal.fire({
+      title: 'Cuidado',
+      text: 'LLena todos los campos',
+      icon: 'warning',
+      confirmButtonText: 'Entendido'
+    })
+  }
+    
   };
 
   return (
     <ThemeProvider theme={theme}>
-        <NavBar colorBack="primary" elevation="5"/>
+        <NavBar colorBack="primary" isAuth={auth.is} elevation="5"/>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box

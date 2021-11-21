@@ -7,10 +7,7 @@ import {BrowserRouter} from "react-router-dom"
 
 ReactDOM.render(
   <React.StrictMode>
-    <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"/>
-  </head>
+ 
     <BrowserRouter>
     <App />
     </BrowserRouter>

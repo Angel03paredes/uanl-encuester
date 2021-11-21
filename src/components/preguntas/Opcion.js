@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import './../../Pregunta.css'
 import {TextField,Typography,Button,FormControlLabel,Radio} from '@mui/material'
 import {Add} from '@mui/icons-material'
+import PreguntasContext from "../context/PreguntasContext";
 
 const NewOpcion = ()=>{
     return (
@@ -16,17 +17,21 @@ const NewOpcion = ()=>{
 
 
 const Opcion = ({cont})=>{
-
+    const {preguntas,addTexto} = useContext(PreguntasContext)
     const [opciones,setOpcion] = useState([])
-
+    const changeValue = (e)=>{
+        preguntas[cont - 1].texto = e.target.value;
+        addTexto(preguntas)
+}
     return(
         <div className="preg-style">
             <div style={{display:"flex",justifyContent:"stretch"}}>
                <Typography style={{marginRight:"5px"}} variant="h5" color="GrayText" >{cont}.-</Typography>
-            <TextField style={{width:"100%"}}
+            <TextField onChange={changeValue} style={{width:"100%"}}
           label="Pregunta"
           id="outlined-size-small"
           size="small"
+          value={preguntas[cont -1].texto}
          />
            
             </div>

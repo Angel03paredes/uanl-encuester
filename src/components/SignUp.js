@@ -13,6 +13,10 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import NavBar from './NavBar';
+import { url } from '../serviceUrl';
+import axios from 'axios';
+import Swal from 'sweetalert2'
+import { useHistory } from 'react-router';
 
 function Copyright(props) {
   return (
@@ -30,19 +34,77 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
+  var history = useHistory();
+
+  const [auth,setAuth] = React.useState({is:false})
+
+  
+
+  React.useEffect(() => {
+    var id = localStorage.getItem("id");
+
+    if(id){
+      history.push("/cms")
+    }
+  }, [])
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    var  email = data.get('email');
+    var password = data.get('password');
+    var firstName = data.get('firstName');
+    var lastName = data.get("lastName");
     // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+   
+    if(email && password && firstName && lastName){
+        if(password.length >= 8){
+            axios.post(url+"Registro",{
+              Nombre: firstName + " " + lastName,
+              Correo: email,
+              Pass:password,
+              Estatus:true
+            })
+            .then(function (response) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Registro Exitoso',
+                showConfirmButton: false,
+                timer: 2500
+              }).then(history.push("/signin"))
+            })
+            .catch(function (error) {
+              console.log(error);
+              Swal.fire({
+                title: 'Error',
+                text: 'OOPS! Vuelve a intentarlo',
+                icon: 'error',
+                confirmButtonText: 'Entendido'
+              })
+            
+            })
+        }else{
+          Swal.fire({
+            title: 'Cuidado',
+            text: 'La contraseña debe ser mínimo de 8 caracteres',
+            icon: 'warning',
+            confirmButtonText: 'Entendido'
+          })
+        }
+    }else{
+      Swal.fire({
+        title: 'Cuidado',
+        text: 'Todos los campos son requeridos',
+        icon: 'warning',
+        confirmButtonText: 'Entendido'
+      })
+    }
+    
   };
 
   return (
     <ThemeProvider theme={theme}>
-        <NavBar color="primary" elevation="5"/>
+        <NavBar color="primary" elevation="5" isAuth={auth.is} />
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
